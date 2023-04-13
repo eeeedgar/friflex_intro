@@ -9,7 +9,7 @@ class WeatherForSeveralDaysPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = (context.read<WeatherBloc>().state as WeatherLoadedState);
+    final state = (context.read<WeatherBloc>().state as WeatherSuccess);
     return Scaffold(
       appBar: AppBar(
           leading: IconButton(

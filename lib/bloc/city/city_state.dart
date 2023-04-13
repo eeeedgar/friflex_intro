@@ -8,22 +8,23 @@ abstract class CityState extends Equatable {
   List<Object?> get props => [];
 }
 
-class CityLoadingState extends CityState {}
+class CityInitial extends CityState {}
 
-class CityEditingState extends CityState {
-  final City? city;
+class CityEmpty extends CityState {
+  final int key;
 
-  const CityEditingState({this.city});
+  const CityEmpty({required this.key});
 
   @override
-  List<Object?> get props => [city];
+  List<Object?> get props => [key];
 }
 
-class CitySpecifiedState extends CityState {
+class CityFilled extends CityState {
+  final int key;
   final City city;
 
-  const CitySpecifiedState({required this.city});
+  const CityFilled({required this.key, required this.city});
 
   @override
-  List<Object?> get props => [city];
+  List<Object?> get props => [key, city];
 }

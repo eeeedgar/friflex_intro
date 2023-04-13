@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/city/city_bloc.dart';
+import 'bloc/network/network_bloc.dart';
 import 'bloc/weather/weather_bloc.dart';
 import 'ui/pages/current_weather_page.dart';
 import 'ui/pages/enter_city_page.dart';
@@ -19,18 +20,17 @@ class _FliflexIntroAppState extends State<FliflexIntroApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => CityBloc()..add(LoadCityEvent()),
+          create: (context) => CityBloc()..add(LoadCity()),
         ),
         BlocProvider(
           create: (context) => WeatherBloc(),
         ),
+        BlocProvider(
+          create: (context) => NetworkBloc(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        // theme: ThemeData(
-        //   colorSchemeSeed: Colors.indigo,
-        //   useMaterial3: true,
-        // ),
         theme: ThemeData(
           useMaterial3: true,
           textTheme: Theme.of(context).textTheme.apply(
@@ -39,14 +39,10 @@ class _FliflexIntroAppState extends State<FliflexIntroApp> {
         ),
         home: BlocBuilder<CityBloc, CityState>(
           builder: (context, state) {
-            if (state is CityLoadingState) {
-              return const LoadCityScreen();
-            }
-            if (state is CityEditingState) {
-              return const EnterCityScreen();
-            } else {
-              // city is specified
+            if (state is CityFilled) {
               return const CurrentWeatherPage();
+            } else {
+              return const FillCityPage();
             }
           },
         ),

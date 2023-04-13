@@ -7,14 +7,14 @@ abstract class WeatherState extends Equatable {
   List<Object> get props => [];
 }
 
-class WeatherInitialState extends WeatherState {}
+class WeatherInitial extends WeatherState {}
 
-class WeatherLoadedState extends WeatherState {
+class WeatherSuccess extends WeatherState {
   final City city;
   final List<Weather> weather;
   final Map<String, Image> icons;
 
-  const WeatherLoadedState({
+  const WeatherSuccess({
     required this.city,
     required this.weather,
     required this.icons,
@@ -24,4 +24,11 @@ class WeatherLoadedState extends WeatherState {
   List<Object> get props => [city, weather, icons];
 }
 
-class WeatherErrorState extends WeatherState {}
+class WeatherFailure extends WeatherState {
+  final int key;
+
+  const WeatherFailure({required this.key});
+
+  @override
+  List<Object> get props => [key];
+}

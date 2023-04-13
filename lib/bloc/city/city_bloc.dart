@@ -4,48 +4,44 @@ import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/city_model.dart';
+import '../../util/helper.dart';
 
 part 'city_event.dart';
 part 'city_state.dart';
 
 class CityBloc extends Bloc<CityEvent, CityState> {
-  CityBloc() : super(CityLoadingState()) {
-    on<LoadCityEvent>(
+  CityBloc() : super(CityInitial()) {
+    on<LoadCity>(
       (event, emit) async {
-        if (state is CityLoadingState) {
+        if (state is CityInitial) {
           final prefs = await SharedPreferences.getInstance();
           String? cityName = prefs.getString('cityName');
           if (cityName == null) {
-            emit(
-              const CityEditingState(city: City(name: '')),
-            );
+            emit(CityEmpty(key: Helper.getRandomIntKey()));
           } else {
-            emit(
-              CitySpecifiedState(city: City(name: cityName)),
-            );
+            emit(CityFilled(key: Helper.getRandomIntKey(), city: City(name: cityName)));
           }
         }
       },
     );
-    on<EnterCityEvent>(
+    on<FillCity>(
       (event, emit) async {
-        if (state is CityEditingState) {
+        if (state is CityEmpty) {
           final prefs = await SharedPreferences.getInstance();
           prefs.setString('cityName', event.city.name);
           emit(
-            CitySpecifiedState(city: event.city),
+            CityFilled(key: Helper.getRandomIntKey(), city: event.city),
           );
         }
       },
     );
-    on<EditCityEvent>(
+    on<RemoveCity>(
       (event, emit) async {
-        if (state is CitySpecifiedState) {
-          final state = this.state as CitySpecifiedState;
+        if (state is CityFilled) {
           final prefs = await SharedPreferences.getInstance();
           prefs.remove('cityName');
           emit(
-            CityEditingState(city: state.city),
+            CityEmpty(key: Helper.getRandomIntKey()),
           );
         }
       },

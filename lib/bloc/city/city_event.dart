@@ -8,15 +8,15 @@ abstract class CityEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadCityEvent extends CityEvent {}
+class LoadCity extends CityEvent {}
 
-class EnterCityEvent extends CityEvent {
+class FillCity extends CityEvent {
   final City city;
 
-  const EnterCityEvent(this.city);
+  const FillCity(this.city);
 
   @override
   List<Object> get props => [city];
 }
 
-class EditCityEvent extends CityEvent {}
+class RemoveCity extends CityEvent {}
