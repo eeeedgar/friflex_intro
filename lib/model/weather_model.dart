@@ -1,15 +1,17 @@
+import 'dart:convert';
+
 class Weather {
-  int? timestamp;
-
-  double? temperature;
-  double? feelsLike;
-  double? minTemparature;
-  double? maxTemparature;
-  double? pressure;
-  double? humidity;
-
-  double? windSpeed;
-  double? windDegree;
+  late int timestamp;
+  late double feelsLike;
+  late double minTemparature;
+  late double maxTemparature;
+  late double temperature;
+  late double pressure;
+  late double humidity;
+  late double windSpeed;
+  late double windDegree;
+  late String icon;
+  late String description;
 
   Weather(
       {required this.timestamp,
@@ -20,7 +22,9 @@ class Weather {
       required this.pressure,
       required this.humidity,
       required this.windSpeed,
-      required this.windDegree});
+      required this.windDegree,
+      required this.icon,
+      required this.description});
 
   Weather.fromJson(Map<String, dynamic> json) {
     timestamp = json['dt'];
@@ -34,5 +38,8 @@ class Weather {
 
     windSpeed = double.parse(json['wind']['speed'].toString());
     windDegree = double.parse(json['wind']['deg'].toString());
+
+    icon = json['weather'][0]['icon'].toString();
+    description = json['weather'][0]['description'].toString();
   }
 }

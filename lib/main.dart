@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:friflex_intro/ui/pages/current_weather_page.dart';
 
 import 'bloc/city/city_bloc.dart';
-import 'pages/enter_city_page.dart';
-import 'pages/weather_page.dart';
+import 'bloc/weather/weather_bloc.dart';
+import 'ui/pages/enter_city_page.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
-  runApp(const MainApp());
+  runApp(const FliflexIntro());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class FliflexIntro extends StatefulWidget {
+  const FliflexIntro({super.key});
+
+  @override
+  State<FliflexIntro> createState() => _FliflexIntroState();
+}
+
+class _FliflexIntroState extends State<FliflexIntro> {
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +27,9 @@ class MainApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => CityBloc()..add(LoadCityEvent()),
+        ),
+        BlocProvider(
+          create: (context) => WeatherBloc(),
         ),
       ],
       child: MaterialApp(
@@ -36,7 +46,7 @@ class MainApp extends StatelessWidget {
               return const EnterCityScreen();
             } else {
               // city is specified
-              return const WeatherScreen();
+              return const CurrentWeatherPage();
             }
           },
         ),

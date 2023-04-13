@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../bloc/city/city_bloc.dart';
-import '../model/city_model.dart';
+import '../../bloc/city/city_bloc.dart';
+import '../../bloc/weather/weather_bloc.dart';
+import '../../model/city_model.dart';
 
 class LoadCityScreen extends StatelessWidget {
   const LoadCityScreen({super.key});

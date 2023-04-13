@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:friflex_intro/repo/weather_repository.dart';
 
 import '../../model/city_model.dart';
@@ -15,10 +16,13 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         if (state is WeatherInitialState) {
           try {
             var weather = await WeatherRepository().getWeather(event.city.name);
+            var icons =
+                WeatherRepository().getIcons(_getUniqueIconIds(weather));
             emit(
               WeatherLoadedState(
                 city: event.city,
                 weather: weather,
+                icons: icons,
               ),
             );
           } catch (e) {
@@ -27,5 +31,14 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         }
       },
     );
+  }
+
+  Set<String> _getUniqueIconIds(List<Weather> weather) {
+    final ids = <String>{};
+    for (var w in weather) {
+      ids.add(w.icon);
+    }
+
+    return ids;
   }
 }
