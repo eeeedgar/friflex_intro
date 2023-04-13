@@ -31,15 +31,16 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
           style: const TextStyle(fontWeight: FontWeight.w500),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
+        leadingWidth: 100,
+        leading: MaterialButton(
+          child: const Center(child: Text('Edit city')),
           onPressed: () {
             context.read<CityBloc>().add(EditCityEvent());
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Text('show'),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('Forecast for 3 days'),
         onPressed: () => Navigator.of(context).push(
           SwipeablePageRoute(
             builder: (BuildContext context) =>
@@ -57,6 +58,9 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
           if (state is WeatherLoadedState) {
             return Column(
               children: [
+                Text(
+                  'Weather forecast for ${Converter.epochToTimeHHMM((context.read<WeatherBloc>().state as WeatherLoadedState).weather.first.timestamp)}',
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -109,7 +113,7 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
                             .windDegree),
                         child: const Icon(Icons.arrow_right_alt_rounded)),
                   ],
-                )
+                ),
               ],
             );
           } else {

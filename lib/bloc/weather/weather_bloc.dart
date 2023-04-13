@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:friflex_intro/repo/weather_repository.dart';
@@ -13,21 +13,18 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   WeatherBloc() : super(WeatherInitialState()) {
     on<LoadWeatherEvent>(
       (event, emit) async {
-        if (state is WeatherInitialState) {
-          try {
-            var weather = await WeatherRepository().getWeather(event.city.name);
-            var icons =
-                WeatherRepository().getIcons(_getUniqueIconIds(weather));
-            emit(
-              WeatherLoadedState(
-                city: event.city,
-                weather: weather,
-                icons: icons,
-              ),
-            );
-          } catch (e) {
-            emit(WeatherErrorState());
-          }
+        try {
+          var weather = await WeatherRepository().getWeather(event.city.name);
+          var icons = WeatherRepository().getIcons(_getUniqueIconIds(weather));
+          emit(
+            WeatherLoadedState(
+              city: event.city,
+              weather: weather,
+              icons: icons,
+            ),
+          );
+        } catch (e) {
+          emit(WeatherErrorState());
         }
       },
     );

@@ -18,14 +18,46 @@ class WeatherForSeveralDaysPage extends StatelessWidget {
           Navigator.of(context).pop();
         },
       )),
-      body: ListView.builder(
-        itemCount: state.weather.length,
-        itemBuilder: (context, index) {
-          return WeatherTile(
-            weather: state.weather[index],
-            icon: state.icons[state.weather[index].icon]!,
-          );
-        },
+      body: Column(
+        children: [
+          Container(
+            height: 90,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.indigo,
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'The lowest temperature',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: WeatherRow(
+                      weather: state.weather[0],
+                      icon: state.icons[state.weather[0].icon]!),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: state.weather.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: WeatherRow(
+                    weather: state.weather[index],
+                    icon: state.icons[state.weather[index].icon]!,
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

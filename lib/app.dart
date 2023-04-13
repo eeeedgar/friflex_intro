@@ -14,7 +14,6 @@ class FliflexIntroApp extends StatefulWidget {
 }
 
 class _FliflexIntroAppState extends State<FliflexIntroApp> {
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -27,11 +26,16 @@ class _FliflexIntroAppState extends State<FliflexIntroApp> {
         ),
       ],
       child: MaterialApp(
-        
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark(
-          // colorSchemeSeed: const Color(0xff6750a4),
+        // theme: ThemeData(
+        //   colorSchemeSeed: Colors.indigo,
+        //   useMaterial3: true,
+        // ),
+        theme: ThemeData(
           useMaterial3: true,
+          textTheme: Theme.of(context).textTheme.apply(
+                fontSizeFactor: 0.7,
+              ),
         ),
         home: BlocBuilder<CityBloc, CityState>(
           builder: (context, state) {

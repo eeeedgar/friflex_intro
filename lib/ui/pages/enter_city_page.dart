@@ -42,28 +42,32 @@ class _EnterCityScreenState extends State<EnterCityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+          label: const Text('Get weather forecast'),
+          onPressed: () {
+            context.read<CityBloc>().add(
+                  EnterCityEvent(
+                    City(name: _cityNameController.text),
+                  ),
+                );
+            context.read<WeatherBloc>().add(LoadWeatherEvent(
+                city: City(name: _cityNameController.value.text)));
+          }),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            TextFormField(
-              controller: _cityNameController,
-              decoration: const InputDecoration(
-                border: UnderlineInputBorder(),
-                labelText: 'Enter city',
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: TextFormField(
+                controller: _cityNameController,
+                decoration: const InputDecoration(
+                  border: UnderlineInputBorder(),
+                  labelText: 'Enter city',
+                ),
               ),
             ),
-            MaterialButton(
-              child: const Text('Submit'),
-              onPressed: () {
-                context.read<CityBloc>().add(
-                      EnterCityEvent(
-                        City(name: _cityNameController.text),
-                      ),
-                    );
-              },
-            )
           ],
         ),
       ),

@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
+
 class Converter {
   static String kelvinToCelsius(double temperature) {
     return '${(temperature - 273.15).toInt()}°';
@@ -19,5 +21,30 @@ class Converter {
 
   static String windSpeed(double speed) {
     return '$speed m/s';
+  }
+
+  static DateTime epochToDateTime(int epoch) {
+    return DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
+  }
+
+  static String epochToTimeHHMM(int epoch) {
+    final time = epochToDateTime(epoch);
+    var minutes = '${time.minute}';
+    if (minutes.length == 1) {
+      minutes = '0$minutes';
+    }
+    return '${time.hour}:$minutes';
+  }
+
+  static String epochToDay(int epoch) {
+    final time = epochToDateTime(epoch);
+    return '${time.day}/${time.month}';
+  }
+
+  static Widget windArrow(double angle) {
+    return Transform.rotate(
+      angle: Converter.windArrowAngle(angle),
+      child: const Icon(Icons.arrow_right_alt_rounded),
+    );
   }
 }

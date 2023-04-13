@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 class Weather {
   late int timestamp;
   late double feelsLike;
-  late double minTemparature;
-  late double maxTemparature;
+  late double minTemperature;
+  late double maxTemperature;
   late double temperature;
   late double pressure;
   late double humidity;
@@ -12,27 +10,29 @@ class Weather {
   late double windDegree;
   late String icon;
   late String description;
+  late String main;
 
   Weather(
       {required this.timestamp,
       required this.temperature,
       required this.feelsLike,
-      required this.minTemparature,
-      required this.maxTemparature,
+      required this.minTemperature,
+      required this.maxTemperature,
       required this.pressure,
       required this.humidity,
       required this.windSpeed,
       required this.windDegree,
       required this.icon,
-      required this.description});
+      required this.description,
+      required this.main});
 
   Weather.fromJson(Map<String, dynamic> json) {
     timestamp = json['dt'];
 
     temperature = double.parse(json['main']['temp'].toString());
     feelsLike = double.parse(json['main']['feels_like'].toString());
-    minTemparature = double.parse(json['main']['temp_min'].toString());
-    maxTemparature = double.parse(json['main']['temp_max'].toString());
+    minTemperature = double.parse(json['main']['temp_min'].toString());
+    maxTemperature = double.parse(json['main']['temp_max'].toString());
     pressure = double.parse(json['main']['pressure'].toString());
     humidity = double.parse(json['main']['humidity'].toString());
 
@@ -41,5 +41,6 @@ class Weather {
 
     icon = json['weather'][0]['icon'].toString();
     description = json['weather'][0]['description'].toString();
+    main = json['weather'][0]['main'].toString();
   }
 }
