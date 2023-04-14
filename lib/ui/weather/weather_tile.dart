@@ -62,8 +62,8 @@ class WeatherRow extends StatelessWidget {
             height: 30,
             errorBuilder: (context, exception, stackTrace) {
               return const SizedBox(
-                width: 30,
-                height: 30,
+                width: 10,
+                height: 10,
                 child: CircularProgressIndicator(), // фотография может и не загрузиться... поэтому на всякий случай сделаем плейсхолдер
               );
             },

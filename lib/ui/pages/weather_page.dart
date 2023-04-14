@@ -168,7 +168,7 @@ class _WeatherPageState extends State<WeatherPage> {
                             onPressed: () => _controller.animateToPage(1,
                                 duration: const Duration(milliseconds: 300),
                                 curve:
-                                    Curves.linear), // обратно можем свайпать!
+                                    Curves.linear), // можем перемещаться не только по кнопке, но и по свайпу
                             child: const Text('Forecast for 3 days',
                                 style: TextStyle(color: Colors.white)),
                           ),

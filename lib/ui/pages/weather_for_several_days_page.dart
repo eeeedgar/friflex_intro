@@ -35,7 +35,7 @@ class _WeatherForSeveralDaysPageState extends State<WeatherForSeveralDaysPage> {
   Widget build(BuildContext context) {
     final state = context.read<WeatherBloc>().state as WeatherSuccess;
     return ListView.builder(
-        itemCount: state.weather.length + 1, // самый холодный элемент остался на своем хронологическом месте, просто я его еще вывел и наверху
+        itemCount: state.weather.length + 1, // самый холодный элемент (с самой холодной температурой) остался на своем хронологическом месте, просто я его еще вывел и наверху
         itemBuilder: (context, index) {
           if (index == 0) { // выводим первым (нулевым) номером
             return ListTile(
