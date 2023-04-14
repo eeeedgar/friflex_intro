@@ -37,7 +37,7 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
             }
           },
           builder: (context, state) {
-            if (state is WeatherSuccess) {
+            if (state is WeatherSuccess && state.weather.isNotEmpty) {
               return Column(
                 children: [
                   Text(
