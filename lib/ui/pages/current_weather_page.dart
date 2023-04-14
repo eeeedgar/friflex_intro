@@ -85,7 +85,9 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text('Pressure'),
+                          SizedBox(height: 8),
                           Text('Humidity'),
+                          SizedBox(height: 8),
                           Text('Wind'),
                         ],
                       ),
@@ -94,8 +96,10 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
                         children: [
                           Text(Converter.pressureToMmgh(
                               state.weather.first.pressure)),
+                              const SizedBox(height: 8),
                           Text(
                               Converter.humidity(state.weather.first.humidity)),
+                              const SizedBox(height: 8),
                           Row(
                             children: [
                               Text(
