@@ -35,7 +35,7 @@ class _WeatherPageState extends State<WeatherPage> {
           create: (context) => WeatherBloc()
             ..add(LoadWeather( // мы должны инициировать загрузку данных при билде этого экрана, потому что при сохранении города
                 city: (context.read<CityBloc>().state as CityFilled).city)), // мы сразу попадаем на этот экран
-        ),
+        ), // иначе просто пропустим событие
         BlocProvider( // с проверкой интернета аналогично
           create: (context) => NetworkBloc()..add(CheckNetwork()),
         ),
