@@ -17,44 +17,69 @@ class CurrentWeatherPage extends StatefulWidget {
 }
 
 class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
-  bool _errorIsShown = false;
+  bool _errorIsShown =
+      false; // так как у нас отсутствие сети и ошибка в сервисе погоды дают
+  //  одну и ту же ошибку (SnackBar), будем запоминать факт показа
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.blue,
-      appBar: _appBar(),
+      appBar: AppBar(
+        backgroundColor: AppColors.blue,
+        elevation: 0,
+        title: Text(
+          (context.read<CityBloc>().state as CityFilled).city.name,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            context
+                .read<CityBloc>()
+                .add(RemoveCity()); // переходим в состояние ввода города
+            // по нажатию кнопки и возвращаемся на предыдущий экран
+          },
+        ),
+      ),
       body: BlocListener<NetworkBloc, NetworkState>(
         listener: (context, state) {
           if (state is NetworkFailure) {
-            _showErrorSnackBar();
+            // слушаем информацию о сети
+            _showErrorSnackBar(); // если ошибка - SnackBar
           }
         },
         child: BlocConsumer<WeatherBloc, WeatherState>(
           listener: (context, state) {
             if (state is WeatherFailure) {
-              _showErrorSnackBar();
-            }
-          },
+              // с помощью блока погоды не только
+              _showErrorSnackBar(); // отображаем SnackBar, но и строим дерево,
+            } // поэтому нужен и Listener, и Builder
+          }, // (SnackBar нельзя отобразить в дереве, поэтому обязательно нужны Listener'ы)
           builder: (context, state) {
             if (state is WeatherSuccess && state.weather.isNotEmpty) {
+              // ответ могли и получить,
               return Column(
+                // но если он пустой, нам с ним делать нечего, поэтому обработаем пустой ответ
                 children: [
+                  // как ошибку
                   Text(
                     'Weather forecast for ${Converter.epochToTimeHHMM(state.weather.first.timestamp)}',
-                  ),
+                  ), // отформатируем время в читаемый вид
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image(
-                        image: (context.read<WeatherBloc>().state
-                                as WeatherSuccess)
-                            .icons
-                            .entries
-                            .first
-                            .value
-                            .image,
-                      ),
+                        image: state.icons.entries.first.value.image,
+                      ), // в этом дереве можем обращаться к стейту как к успешному и не кастить лишний раз
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -64,7 +89,7 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            ('Feels ${Converter.kelvinToCelsius((context.read<WeatherBloc>().state as WeatherSuccess).weather.first.feelsLike)}'),
+                            ('Feels ${Converter.kelvinToCelsius(state.weather.first.feelsLike)}'),
                           ),
                         ],
                       ),
@@ -96,10 +121,10 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
                         children: [
                           Text(Converter.pressureToMmgh(
                               state.weather.first.pressure)),
-                              const SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                               Converter.humidity(state.weather.first.humidity)),
-                              const SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Row(
                             children: [
                               Text(
@@ -109,7 +134,7 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
                               ),
                               Converter.windArrow(
                                 state.weather.first.windDegree,
-                              ),
+                              ), // это стрелка направления ветра
                             ],
                           )
                         ],
@@ -122,11 +147,11 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
                     child: MaterialButton(
                       color: Colors.blueAccent,
                       onPressed: () => Navigator.of(context).push(
-                        SwipeablePageRoute(
-                          builder: (BuildContext context) =>
-                              const WeatherForSeveralDaysPage(),
+                        SwipeablePageRoute( // кнопка никакие состояния не меняет
+                          builder: (BuildContext context) => // а просто переходит на другую страницу,
+                              const WeatherForSeveralDaysPage(), // информация для которой у нас уже есть
                         ),
-                      ),
+                      ), // обратно можем свайпать!
                       child: const Text('Forecast for 3 days',
                           style: TextStyle(color: Colors.white)),
                     ),
@@ -146,15 +171,15 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
     );
   }
 
-  void _showErrorSnackBar() {
-    if (!_errorIsShown) {
+  void _showErrorSnackBar() { // SnackBar используется дважды (интернетом и погодой),
+    if (!_errorIsShown) { //  поэтому не будем дублировать
       _errorIsShown = true;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           shape: ShapeBorder.lerp(null, null, 10),
           backgroundColor: Colors.white.withOpacity(0.2),
           behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(
+          margin: EdgeInsets.only( // сделаем его по центру, а не снизу
             bottom: MediaQuery.of(context).size.height / 2,
             left: 50,
             right: 50,
@@ -170,30 +195,5 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
         ),
       );
     }
-  }
-
-  AppBar _appBar() {
-    return AppBar(
-      backgroundColor: AppColors.blue,
-      elevation: 0,
-      title: Text(
-        (context.read<CityBloc>().state as CityFilled).city.name,
-        style: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 20,
-          color: Colors.white,
-        ),
-      ),
-      centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_rounded,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          context.read<CityBloc>().add(RemoveCity());
-        },
-      ),
-    );
   }
 }

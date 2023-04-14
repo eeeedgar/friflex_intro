@@ -14,7 +14,7 @@ class WeatherRow extends StatelessWidget {
     return Container(
       decoration: isColdest
       ? const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Colors.white38)))
-      : null,
+      : null, // украшение для самого холодного элемента
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -22,7 +22,7 @@ class WeatherRow extends StatelessWidget {
             width: 30,
             child: Text(
               Converter.epochToDay(weather.timestamp),
-              style: TextStyle(fontSize: 10),
+              style: const TextStyle(fontSize: 10),
             ),
           ),
           SizedBox(
@@ -30,28 +30,28 @@ class WeatherRow extends StatelessWidget {
             child: Text(
               Converter.epochToTimeHHMM(weather.timestamp),
               textAlign: TextAlign.end,
-              style: TextStyle(fontSize: 10),
+              style: const TextStyle(fontSize: 10),
             ),
           ),
           SizedBox(
             width: 60,
             child: Text(
               weather.main,
-              style: TextStyle(fontSize: 10),
+              style: const TextStyle(fontSize: 10),
             ),
           ),
           SizedBox(
             width: 20,
             child: Text(
               Converter.kelvinToCelsius(weather.temperature),
-              style: TextStyle(fontSize: 10),
+              style: const TextStyle(fontSize: 10),
             ),
           ),
           SizedBox(
             width: 50,
             child: Text(
               Converter.windSpeed(weather.windSpeed),
-              style: TextStyle(fontSize: 10),
+              style: const TextStyle(fontSize: 10),
             ),
           ),
           Converter.windArrow(weather.windDegree),
@@ -64,7 +64,7 @@ class WeatherRow extends StatelessWidget {
               return const SizedBox(
                 width: 30,
                 height: 30,
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(), // фотография может и не загрузиться... поэтому на всякий случай сделаем плейсхолдер
               );
             },
           )

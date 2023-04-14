@@ -32,3 +32,5 @@ class WeatherFailure extends WeatherState {
   @override
   List<Object> get props => [key];
 }
+
+// по сути похоже на проверку интернета, состояния аналогичные

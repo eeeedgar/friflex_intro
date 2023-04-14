@@ -8,3 +8,5 @@ abstract class NetworkEvent extends Equatable {
 }
 
 class CheckNetwork extends NetworkEvent {}
+
+// событие всего одно - потому что мы в силах только проверить интернет

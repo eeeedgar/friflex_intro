@@ -1,4 +1,4 @@
-class Weather {
+class Weather { // то что получаем из сервиса (не все поля, а только +- важные)
   late int timestamp;
   late double feelsLike;
   late double minTemperature;

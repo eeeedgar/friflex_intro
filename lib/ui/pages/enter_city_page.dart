@@ -31,7 +31,7 @@ class _FillCityPageState extends State<FillCityPage> {
         child: BlocBuilder<CityBloc, CityState>(
           builder: (context, state) {
             if (state is CityInitial) {
-              return const CircularProgressIndicator();
+              return const CircularProgressIndicator(); // из  Shared Preferences получаем Future, поэтому не сразу перейдем в состояние Empty или Filled
             } // state is CityEmpty
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -39,7 +39,7 @@ class _FillCityPageState extends State<FillCityPage> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: TextFormField(
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     controller: _cityNameController,
                     decoration: const InputDecoration(
                       labelStyle: TextStyle(color: Colors.white70),
@@ -60,13 +60,16 @@ class _FillCityPageState extends State<FillCityPage> {
                     color: Colors.blueAccent,
                     onPressed: () {
                       context.read<CityBloc>().add(
+                            // по нажатию кнопки переводим CityBloc в состояние выбранного города
                             FillCity(City(name: _cityNameController.text)),
                           );
                       context.read<WeatherBloc>().add(
+                            // также отправляем запрос в сервис погоды
                             LoadWeather(
                                 city: City(name: _cityNameController.text)),
                           );
                       context.read<NetworkBloc>().add(
+                            // и проверяем состояние соединения
                             CheckNetwork(),
                           );
                     },

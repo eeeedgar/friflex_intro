@@ -26,3 +26,5 @@ class NetworkFailure extends NetworkState {
   @override
   List<Object> get props => [key];
 }
+
+// состояния всего три: начальное, успех и провал

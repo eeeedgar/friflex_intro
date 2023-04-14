@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class Converter {
+class Converter { // класс чтобы приводить полученную DTO в красивый вид
   static String kelvinToCelsius(double temperature) {
     return '${(temperature - 273.15).toInt()}°';
   }

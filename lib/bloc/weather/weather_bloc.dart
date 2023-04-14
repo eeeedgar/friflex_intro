@@ -16,8 +16,8 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       (event, emit) async {
         try {
           var weather = await WeatherRepository().getWeather(event.city.name);
-          var icons = WeatherRepository().getIcons(_getUniqueIconIds(weather));
-          emit(
+          var icons = WeatherRepository().getIcons(_getUniqueIconIds(weather)); // использую из-за того, что много иконок повторятся,
+          emit( //  а много качать не хочется
             WeatherSuccess(
               city: event.city,
               weather: weather,
@@ -32,7 +32,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   }
 
   Set<String> _getUniqueIconIds(List<Weather> weather) {
-    final ids = <String>{};
+    final ids = <String>{}; // будем хранить иконки в словаре, потому что повторяться им смысла нет
     for (var w in weather) {
       ids.add(w.icon);
     }

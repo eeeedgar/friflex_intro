@@ -15,3 +15,5 @@ class LoadWeather extends WeatherEvent {
   @override
   List<Object> get props => [city];
 }
+
+// погоду мы можем только запрашивать

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:friflex_intro/model/weather_model.dart';
 
 import '../../bloc/weather/weather_bloc.dart';
 import '../../util/app_colors.dart';
@@ -15,7 +14,6 @@ class WeatherForSeveralDaysPage extends StatefulWidget {
 }
 
 class _WeatherForSeveralDaysPageState extends State<WeatherForSeveralDaysPage> {
-  final List<Weather> _weatherSlice = List.empty(growable: true);
   late int _minTemperatureIndex;
 
   @override
@@ -23,25 +21,12 @@ class _WeatherForSeveralDaysPageState extends State<WeatherForSeveralDaysPage> {
     super.initState();
     final state = context.read<WeatherBloc>().state as WeatherSuccess;
 
-    final closestEvent = state
-        .weather.first; // будем отмерять 3 дня от ближайшей записи в прогнозе
-
-    const threeDaysInSeconds = 259200; // 3 дня в секундах
-
-    var i = 0;
-    while (i < state.weather.length &&
-        state.weather[i].timestamp - closestEvent.timestamp <
-            threeDaysInSeconds) {
-      _weatherSlice.add(state.weather[i]);
-      i++;
-    }
-
-    var minTemperature = _weatherSlice.first
-        .temperature; // будем искать самый холодный момент среди ближайших трех дней
+    var minTemperature = state.weather.first
+        .temperature; // будем искать самый холодный момент
     _minTemperatureIndex = 0;
-    for (var i = 1; i < _weatherSlice.length; i++) {
-      if (_weatherSlice[i].temperature < minTemperature) {
-        minTemperature = _weatherSlice[i].temperature;
+    for (var i = 1; i < state.weather.length; i++) {
+      if (state.weather[i].temperature < minTemperature) {
+        minTemperature = state.weather[i].temperature;
         _minTemperatureIndex = i;
       }
     }
@@ -70,21 +55,21 @@ class _WeatherForSeveralDaysPageState extends State<WeatherForSeveralDaysPage> {
             },
           )),
       body: ListView.builder(
-        itemCount: _weatherSlice.length + 1,
+        itemCount: state.weather.length + 1, // самый холодный элемент остался на своем хронологическом месте, просто я его еще вывел и наверху
         itemBuilder: (context, index) {
-          if (index == 0) {
+          if (index == 0) { // выводим первым (нулевым) номером
             return ListTile(
               title: WeatherRow(
-                weather: _weatherSlice[_minTemperatureIndex],
-                icon: state.icons[_weatherSlice[_minTemperatureIndex].icon]!,
-                isColdest: true,
+                weather: state.weather[_minTemperatureIndex],
+                icon: state.icons[state.weather[_minTemperatureIndex].icon]!,
+                isColdest: true, // стилизуем его, чтобы не сливался
               ),
             );
           }
           return ListTile(
             title: WeatherRow(
-              weather: _weatherSlice[index - 1],
-              icon: state.icons[_weatherSlice[index - 1].icon]!,
+              weather: state.weather[index - 1], // index - 1, потому что относительно ListView.
+              icon: state.icons[state.weather[index - 1].icon]!, // а мы нулевым элементов поставили не нулевой в списке
             ),
           );
         },
