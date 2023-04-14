@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/weather/weather_bloc.dart';
+import '../../util/app_colors.dart';
 import '../weather/weather_tile.dart';
 
 class WeatherForSeveralDaysPage extends StatelessWidget {
@@ -11,13 +12,24 @@ class WeatherForSeveralDaysPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = (context.read<WeatherBloc>().state as WeatherSuccess);
     return Scaffold(
+      backgroundColor: AppColors.blue,
       appBar: AppBar(
+        elevation: 0,
+          title: Text(
+            state.city.name,
+            style: const TextStyle(color: Colors.white),
+          ),
+          centerTitle: true,
+          backgroundColor: AppColors.blue,
           leading: IconButton(
-        icon: const Icon(Icons.arrow_back_rounded),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      )),
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )),
       body: Column(
         children: [
           Container(

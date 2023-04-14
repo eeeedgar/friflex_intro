@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friflex_intro/ui/pages/weather_for_several_days_page.dart';
-import 'package:friflex_intro/util/helper.dart';
 import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 import '../../bloc/city/city_bloc.dart';
 import '../../bloc/network/network_bloc.dart';
 import '../../bloc/weather/weather_bloc.dart';
+import '../../util/app_colors.dart';
 import '../../util/converter.dart';
 
 class CurrentWeatherPage extends StatefulWidget {
@@ -22,6 +22,7 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.blue,
       appBar: _appBar(),
       body: BlocListener<NetworkBloc, NetworkState>(
         listener: (context, state) {
@@ -40,7 +41,7 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
               return Column(
                 children: [
                   Text(
-                    'Weather forecast for ${Converter.epochToTimeHHMM((context.read<WeatherBloc>().state as WeatherSuccess).weather.first.timestamp)}',
+                    'Weather forecast for ${Converter.epochToTimeHHMM(state.weather.first.timestamp)}',
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -58,12 +59,8 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            (Converter.kelvinToCelsius((context
-                                    .read<WeatherBloc>()
-                                    .state as WeatherSuccess)
-                                .weather
-                                .first
-                                .temperature)),
+                            (Converter.kelvinToCelsius(
+                                state.weather.first.temperature)),
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Text(
@@ -73,38 +70,71 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
                       ),
                     ],
                   ),
-                  Text(
-                      'Pressure: ${Converter.pressureToMmgh((context.read<WeatherBloc>().state as WeatherSuccess).weather.first.pressure)}'),
-                  Text(
-                      'Humidity: ${Converter.humidity((context.read<WeatherBloc>().state as WeatherSuccess).weather.first.humidity)}'),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: Text(
+                      state.weather.first.main,
+                      style: const TextStyle(
+                          fontSize: 25, fontWeight: FontWeight.w500),
+                    ),
+                  ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text(
-                          'Wind: ${Converter.windSpeed((context.read<WeatherBloc>().state as WeatherSuccess).weather.first.windSpeed)}'),
-                      Transform.rotate(
-                          angle: Converter.windArrowAngle((context
-                                  .read<WeatherBloc>()
-                                  .state as WeatherSuccess)
-                              .weather
-                              .first
-                              .windDegree),
-                          child: const Icon(Icons.arrow_right_alt_rounded)),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text('Pressure'),
+                          Text('Humidity'),
+                          Text('Wind'),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(Converter.pressureToMmgh(
+                              state.weather.first.pressure)),
+                          Text(
+                              Converter.humidity(state.weather.first.humidity)),
+                          Row(
+                            children: [
+                              Text(
+                                Converter.windSpeed(
+                                  state.weather.first.windSpeed,
+                                ),
+                              ),
+                              Converter.windArrow(
+                                state.weather.first.windDegree,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ],
                   ),
-                  MaterialButton(
-                    onPressed: () => Navigator.of(context).push(
-                      SwipeablePageRoute(
-                        builder: (BuildContext context) =>
-                            const WeatherForSeveralDaysPage(),
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: MaterialButton(
+                      color: Colors.blueAccent,
+                      onPressed: () => Navigator.of(context).push(
+                        SwipeablePageRoute(
+                          builder: (BuildContext context) =>
+                              const WeatherForSeveralDaysPage(),
+                        ),
                       ),
+                      child: const Text('Forecast for 3 days',
+                          style: TextStyle(color: Colors.white)),
                     ),
-                    child: const Text('Forecast for 3 days'),
-                  )
+                  ),
                 ],
               );
             } else {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white70,
+                ),
+              );
             }
           },
         ),
@@ -115,20 +145,54 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
   void _showErrorSnackBar() {
     if (!_errorIsShown) {
       _errorIsShown = true;
-      ScaffoldMessenger.of(context).showSnackBar(Helper.snackBar(context));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          shape: ShapeBorder.lerp(null, null, 10),
+          backgroundColor: Colors.white.withOpacity(0.2),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).size.height / 2,
+            left: 50,
+            right: 50,
+          ),
+          content: const Text(
+            "Error receiving data",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      );
     }
   }
 
   AppBar _appBar() {
     return AppBar(
+      backgroundColor: AppColors.blue,
+      elevation: 0,
       title: Text(
         (context.read<CityBloc>().state as CityFilled).city.name,
-        style: const TextStyle(fontWeight: FontWeight.w500),
+        style: const TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 20,
+          color: Colors.white,
+        ),
       ),
       centerTitle: true,
-      leadingWidth: 100,
+      leadingWidth: 110,
       leading: MaterialButton(
-        child: const Center(child: Text('Choose city')),
+        child: const Center(
+          child: Text(
+            'Choose city',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.white,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ),
         onPressed: () {
           context.read<CityBloc>().add(RemoveCity());
         },

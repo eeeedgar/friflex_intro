@@ -44,7 +44,10 @@ class Converter {
   static Widget windArrow(double angle) {
     return Transform.rotate(
       angle: Converter.windArrowAngle(angle),
-      child: const Icon(Icons.arrow_right_alt_rounded),
+      child: const Icon(
+        Icons.arrow_right_alt_rounded,
+        color: Colors.white,
+      ),
     );
   }
 }

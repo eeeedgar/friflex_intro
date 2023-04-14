@@ -17,6 +17,7 @@ class WeatherRow extends StatelessWidget {
           width: 30,
           child: Text(
             Converter.epochToDay(weather.timestamp),
+            style: TextStyle(fontSize: 10),
           ),
         ),
         SizedBox(
@@ -24,22 +25,28 @@ class WeatherRow extends StatelessWidget {
           child: Text(
             Converter.epochToTimeHHMM(weather.timestamp),
             textAlign: TextAlign.end,
+            style: TextStyle(fontSize: 10),
           ),
         ),
         SizedBox(
           width: 60,
-          child: Text(weather.main),
+          child: Text(
+            weather.main,
+            style: TextStyle(fontSize: 10),
+          ),
         ),
         SizedBox(
           width: 20,
           child: Text(
             Converter.kelvinToCelsius(weather.temperature),
+            style: TextStyle(fontSize: 10),
           ),
         ),
         SizedBox(
           width: 50,
           child: Text(
             Converter.windSpeed(weather.windSpeed),
+            style: TextStyle(fontSize: 10),
           ),
         ),
         Converter.windArrow(weather.windDegree),
@@ -48,18 +55,11 @@ class WeatherRow extends StatelessWidget {
           image: icon.image,
           width: 30,
           height: 30,
-          loadingBuilder: (BuildContext context, Widget child,
-              ImageChunkEvent? loadingProgress) {
-            if (loadingProgress == null) {
-              return child;
-            }
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-              ),
+          errorBuilder: (context, exception, stackTrace) {
+            return const SizedBox(
+              width: 30,
+              height: 30,
+              child: CircularProgressIndicator(),
             );
           },
         )

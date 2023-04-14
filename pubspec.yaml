@@ -16,6 +16,7 @@ dependencies:
   http: ^0.13.5
   swipeable_page_route: ^0.3.0
   connectivity_plus: ^3.0.4
+  google_fonts: ^4.0.3
 
 dev_dependencies:
   flutter_test:

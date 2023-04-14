@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'bloc/city/city_bloc.dart';
 import 'bloc/network/network_bloc.dart';
@@ -33,9 +34,9 @@ class _FliflexIntroAppState extends State<FliflexIntroApp> {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
-          textTheme: Theme.of(context).textTheme.apply(
-                fontSizeFactor: 0.7,
-              ),
+          textTheme: GoogleFonts.rubikTextTheme(
+            Theme.of(context).textTheme,
+          ).apply(bodyColor: Colors.white),
         ),
         home: BlocBuilder<CityBloc, CityState>(
           builder: (context, state) {
