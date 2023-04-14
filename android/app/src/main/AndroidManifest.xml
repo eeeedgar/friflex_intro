@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.friflex_intro">
+      <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="friflex_intro"
         android:name="${applicationName}"
