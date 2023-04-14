@@ -181,17 +181,10 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
         ),
       ),
       centerTitle: true,
-      leadingWidth: 110,
-      leading: MaterialButton(
-        child: const Center(
-          child: Text(
-            'Choose city',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.white,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
+      leading: IconButton(
+        icon: const Icon(
+          Icons.arrow_back_rounded,
+          color: Colors.white,
         ),
         onPressed: () {
           context.read<CityBloc>().add(RemoveCity());
