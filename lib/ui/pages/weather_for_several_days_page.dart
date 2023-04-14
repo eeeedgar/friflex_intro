@@ -1,20 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:friflex_intro/model/weather_model.dart';
 
 import '../../bloc/weather/weather_bloc.dart';
 import '../../util/app_colors.dart';
 import '../weather/weather_tile.dart';
 
-class WeatherForSeveralDaysPage extends StatelessWidget {
+class WeatherForSeveralDaysPage extends StatefulWidget {
   const WeatherForSeveralDaysPage({super.key});
 
   @override
+  State<WeatherForSeveralDaysPage> createState() =>
+      _WeatherForSeveralDaysPageState();
+}
+
+class _WeatherForSeveralDaysPageState extends State<WeatherForSeveralDaysPage> {
+  final List<Weather> _weatherSlice = List.empty(growable: true);
+  late int _minTemperatureIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    final state = context.read<WeatherBloc>().state as WeatherSuccess;
+
+    final closestEvent = state
+        .weather.first; // будем отмерять 3 дня от ближайшей записи в прогнозе
+
+    const threeDaysInSeconds = 259200; // 3 дня в секундах
+
+    var i = 0;
+    while (i < state.weather.length &&
+        state.weather[i].timestamp - closestEvent.timestamp <
+            threeDaysInSeconds) {
+      _weatherSlice.add(state.weather[i]);
+      i++;
+    }
+
+    var minTemperature = _weatherSlice.first
+        .temperature; // будем искать самый холодный момент среди ближайших трех дней
+    _minTemperatureIndex = 0;
+    for (var i = 1; i < _weatherSlice.length; i++) {
+      if (_weatherSlice[i].temperature < minTemperature) {
+        minTemperature = _weatherSlice[i].temperature;
+        _minTemperatureIndex = i;
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final state = (context.read<WeatherBloc>().state as WeatherSuccess);
+    final state = context.read<WeatherBloc>().state as WeatherSuccess;
     return Scaffold(
       backgroundColor: AppColors.blue,
       appBar: AppBar(
-        elevation: 0,
+          elevation: 0,
           title: Text(
             state.city.name,
             style: const TextStyle(color: Colors.white),
@@ -30,46 +69,25 @@ class WeatherForSeveralDaysPage extends StatelessWidget {
               Navigator.of(context).pop();
             },
           )),
-      body: Column(
-        children: [
-          Container(
-            height: 90,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.indigo,
-            child: Column(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    'The lowest temperature',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: WeatherRow(
-                      weather: state.weather[0],
-                      icon: state.icons[state.weather[0].icon]!),
-                ),
-              ],
+      body: ListView.builder(
+        itemCount: _weatherSlice.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return ListTile(
+              title: WeatherRow(
+                weather: _weatherSlice[_minTemperatureIndex],
+                icon: state.icons[_weatherSlice[_minTemperatureIndex].icon]!,
+                isColdest: true,
+              ),
+            );
+          }
+          return ListTile(
+            title: WeatherRow(
+              weather: _weatherSlice[index - 1],
+              icon: state.icons[_weatherSlice[index - 1].icon]!,
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: state.weather.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: WeatherRow(
-                    weather: state.weather[index],
-                    icon: state.icons[state.weather[index].icon]!,
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
