@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:friflex_intro/bloc/weather/weather_bloc.dart';
 
 import '../../bloc/city/city_bloc.dart';
-import '../../bloc/network/network_bloc.dart';
 import '../../model/city_model.dart';
 import '../../util/app_colors.dart';
 
@@ -62,15 +60,6 @@ class _FillCityPageState extends State<FillCityPage> {
                       context.read<CityBloc>().add(
                             // по нажатию кнопки переводим CityBloc в состояние выбранного города
                             FillCity(City(name: _cityNameController.text)),
-                          );
-                      context.read<WeatherBloc>().add(
-                            // также отправляем запрос в сервис погоды
-                            LoadWeather(
-                                city: City(name: _cityNameController.text)),
-                          );
-                      context.read<NetworkBloc>().add(
-                            // и проверяем состояние соединения
-                            CheckNetwork(),
                           );
                     },
                     child: const Text('Get weather forecast',
